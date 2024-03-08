@@ -1,7 +1,7 @@
 use ratatui::{
-    layout::Alignment,
+    layout::{Alignment, Layout, Direction, Constraint},
     style::{Color, Style},
-    widgets::{Block, BorderType, Paragraph},
+    widgets::{Block, BorderType, Paragraph, Padding},
     Frame,
 };
 
@@ -13,22 +13,28 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     // See the following resources:
     // - https://docs.rs/ratatui/latest/ratatui/widgets/index.html
     // - https://github.com/ratatui-org/ratatui/tree/master/examples
+    
+    let layout = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(vec![
+            Constraint::Percentage(20),
+            Constraint::Percentage(80),
+        ])
+        .split(frame.size());
+
     frame.render_widget(
-        Paragraph::new(format!(
-            "This is a tui template.\n\
-                Press `Esc`, `Ctrl-C` or `q` to stop running.\n\
-                Press left and right to increment and decrement the counter respectively.\n\
-                Counter: {}",
-            app.counter
+        Paragraph::new(String::from(
+                "Space: New Picture\n".to_string() +
+                "    q: Quit"
         ))
         .block(
             Block::bordered()
-                .title("Template")
+                .title("Menu")
                 .title_alignment(Alignment::Center)
+                .padding(Padding::new(1, 0, 1, 0))
                 .border_type(BorderType::Rounded),
         )
-        .style(Style::default().fg(Color::Cyan).bg(Color::Black))
-        .centered(),
-        frame.size(),
+        .style(Style::default().fg(Color::Yellow).bg(Color::Black)),
+        layout[0],
     )
 }
