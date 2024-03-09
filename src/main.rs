@@ -8,7 +8,7 @@ use ratatui::Terminal;
 
 fn main() -> AppResult<()> {
     // Create an application.
-    let mut app = App::new();
+    let mut app = App::default();
 
     // Initialize the terminal user interface.
     let backend = CrosstermBackend::new(io::stderr());
@@ -18,7 +18,7 @@ fn main() -> AppResult<()> {
     tui.init()?;
 
     // Start the main loop.
-    while app.running {
+    while app.running() {
         // Render the user interface.
         tui.draw(&mut app)?;
         // Handle events.

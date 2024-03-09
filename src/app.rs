@@ -7,43 +7,81 @@ pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
 #[derive(Debug)]
 pub struct App {
     /// Is the application running?
-    pub running: bool,
-    /// counter
-    pub counter: u8,
+    running: bool,
+    state: AppState,
+}
+
+#[derive(Debug)]
+pub enum AppState {
+    Menu,
+    Draw,
 }
 
 impl Default for App {
     fn default() -> Self {
         Self {
             running: true,
-            counter: 0,
+            state: AppState::Menu,
         }
     }
 }
 
 impl App {
     /// Constructs a new instance of [`App`].
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(state: AppState) -> Self {
+        App {
+            running: true,
+            state,
+        }
     }
 
     /// Handles the tick event of the terminal.
     pub fn tick(&self) {}
+
+    pub fn running(&self) -> bool { self.running }
 
     /// Set running to false to quit the application.
     pub fn quit(&mut self) {
         self.running = false;
     }
 
-    pub fn increment_counter(&mut self) {
-        if let Some(res) = self.counter.checked_add(1) {
-            self.counter = res;
-        }
+    pub fn change_state(&mut self) {
+        self.state = match self.state {
+            AppState::Menu => AppState::Draw,
+            AppState::Draw => AppState::Menu,
+        };
     }
 
-    pub fn decrement_counter(&mut self) {
-        if let Some(res) = self.counter.checked_sub(1) {
-            self.counter = res;
-        }
+    pub fn new_image() {
+        todo!("Not yet implemented")
+    }
+
+    pub fn reveal() {
+        todo!("Not yet implemented")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn initial_state_is_menu() {
+        let app = App::default();
+        assert!(matches!(app.state, AppState::Menu));
+    }
+
+    #[test]
+    fn menu_state_to_draw_state() {
+        let mut app = App::new(AppState::Menu);
+        app.change_state();
+        assert!(matches!(app.state, AppState::Draw))
+    }
+
+    #[test]
+    fn draw_state_to_menu_state() {
+        let mut app = App::new(AppState::Draw);
+        app.change_state();
+        assert!(matches!(app.state, AppState::Menu))
     }
 }
