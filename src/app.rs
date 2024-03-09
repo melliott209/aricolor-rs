@@ -63,6 +63,10 @@ impl App {
 
 #[cfg(test)]
 mod tests {
+    use crossterm::event::{KeyEvent, KeyModifiers, KeyEventState, KeyCode};
+
+    use crate::handler::handle_key_events;
+
     use super::*;
 
     #[test]
@@ -83,5 +87,18 @@ mod tests {
         let mut app = App::new(AppState::Draw);
         app.change_state();
         assert!(matches!(app.state, AppState::Menu))
+    }
+
+    #[test]
+    fn q_to_quit() {
+        let mut app = App::new(AppState::Menu);
+        handle_key_events(KeyEvent { 
+            code: KeyCode::Char('q'),
+            modifiers: KeyModifiers::NONE,
+            kind: crossterm::event::KeyEventKind::Press,
+            state: KeyEventState::NONE
+        }, &mut app)
+            .expect("Error sending 'q' key event to test.");
+        assert!(!app.running());
     }
 }
