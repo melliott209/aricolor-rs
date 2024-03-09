@@ -23,10 +23,10 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         .split(frame.size());
 
     frame.render_widget(
-        Paragraph::new(String::from(
+        Paragraph::new(
                 "Space: New Picture\n".to_string() +
                 "    q: Quit"
-        ))
+        )
         .block(
             Block::bordered()
                 .title("Menu")
@@ -36,5 +36,16 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         )
         .style(Style::default().fg(Color::Yellow).bg(Color::Black)),
         layout[0],
-    )
+    );
+
+    frame.render_widget(
+        Paragraph::new("").block(
+            Block::bordered()
+            .title("Ari-Color v0.1")
+            .title_alignment(Alignment::Center)
+            .border_type(BorderType::Rounded),
+        )
+        .style(Style::default().fg(Color::Yellow).bg(Color::Black)),
+        layout[1],
+    );
 }
