@@ -38,8 +38,17 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         layout[0],
     );
 
+    let mut text = String::new();
+    for row in app.image() {
+        for tile in row {
+            text.push(tile.glyph());
+        }
+        text.push('\n');
+    }
+    let ascii_grid = Paragraph::new(text);
+
     frame.render_widget(
-        Paragraph::new("").block(
+        ascii_grid.block(
             Block::bordered()
             .title("Ari-Color v0.1")
             .title_alignment(Alignment::Center)

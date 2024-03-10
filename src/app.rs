@@ -9,7 +9,7 @@ pub struct App {
     /// Is the application running?
     running: bool,
     state: AppState,
-    image: [[Tile;20];40],
+    image: [[Tile;40];20],
 }
 
 #[derive(Debug)]
@@ -23,7 +23,7 @@ impl Default for App {
         Self {
             running: true,
             state: AppState::Menu,
-            image: [[Tile::default();20];40],
+            image: [[Tile::default();40];20],
         }
     }
 }
@@ -34,7 +34,7 @@ impl App {
         App {
             running: true,
             state,
-            image: [[Tile::default();20];40],
+            image: [[Tile::default();40];20],
         }
     }
 
@@ -42,6 +42,8 @@ impl App {
     pub fn tick(&self) {}
 
     pub fn running(&self) -> bool { self.running }
+
+    pub fn image(&self) -> [[Tile;40];20] { self.image }
 
     /// Set running to false to quit the application.
     pub fn quit(&mut self) {
@@ -68,7 +70,7 @@ impl App {
 /// it doesn't get drawn.
 
 #[derive(Debug, Copy, PartialEq)]
-struct Tile {
+pub struct Tile {
     glyph: char,
     hidden: bool,
 }
@@ -79,12 +81,19 @@ impl Clone for Tile {
     }
 }
 
-impl Tile {
-    pub fn default() -> Self {
+impl Default for Tile {
+    fn default() -> Self {
         Tile {
-            glyph: ' ',
+            glyph: '.',
             hidden: true,
         }
+    }
+
+}
+
+impl Tile {
+    pub fn glyph(&self) -> char {
+        self.glyph
     }
 }
 
@@ -132,6 +141,6 @@ mod tests {
     #[test]
     fn app_starts_with_blank_image() {
         let app = App::default();
-        assert_eq!(app.image, [[Tile{glyph: ' ', hidden: true};20];40]);
+        assert_eq!(app.image, [[Tile{glyph: '.', hidden: true};40];20]);
     }
 }
