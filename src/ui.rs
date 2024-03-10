@@ -29,7 +29,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         )
         .block(
             Block::bordered()
-                .title("Menu")
+                .title(" Menu ")
                 .title_alignment(Alignment::Center)
                 .padding(Padding::new(1, 0, 1, 0))
                 .border_type(BorderType::Rounded),
@@ -43,7 +43,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
     frame.render_widget(
         ascii_grid.block(
             Block::bordered()
-            .title("Ari-Color v0.1")
+            .title(" Ari-Color v0.1 ")
             .title_alignment(Alignment::Center)
             .padding(Padding::new(0, 0, layout[1].height / 2 - 20 / 2, 0))
             .border_type(BorderType::Rounded),
