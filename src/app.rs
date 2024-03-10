@@ -1,4 +1,4 @@
-use std::{error, char};
+use std::{error, char, fs::File, io::{self, Read}};
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
@@ -68,7 +68,20 @@ impl App {
         };
     }
 
-    pub fn new_image() {
+    fn load_image(&mut self, filepath: &str) -> Result<(), io::Error> {
+        let mut file = File::open(filepath)?;
+        let mut contents = String::new();
+        file.read_to_string(&mut contents)?;
+
+        for (row, line) in contents.lines().enumerate() {
+            for (col, c) in line.chars().enumerate() {
+                self.image[row][col].set_glyph(c);
+            }
+        }
+        Ok(())
+    }
+
+    pub fn new_image(&mut self) {
         todo!("Not yet implemented")
     }
 
@@ -79,7 +92,6 @@ impl App {
 
 /// A single character-tile on the drawing surface. If hidden
 /// it doesn't get drawn.
-
 #[derive(Debug, Copy, PartialEq)]
 pub struct Tile {
     glyph: char,
@@ -105,6 +117,10 @@ impl Default for Tile {
 impl Tile {
     pub fn glyph(&self) -> char {
         self.glyph
+    }
+
+    pub fn set_glyph(&mut self, c: char) {
+        self.glyph = c;
     }
 }
 
@@ -180,5 +196,34 @@ mod tests {
              ........................................\n\
              ........................................\n"
             );
+    }
+
+    #[test]
+    fn load_image_correctly() {
+        let mut app = App::default();
+        app.load_image("triforce.txt")
+            .expect("Error loading test image");
+        assert_eq!(app.image_as_string(),
+            "+======================================+\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                   /\\                 |\n\
+             |                  /  \\                |\n\
+             |                 /    \\               |\n\
+             |                /------\\              |\n\
+             |               / \\    / \\             |\n\
+             |              /   \\  /   \\            |\n\
+             |             /_____\\/_____\\           |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             |                                      |\n\
+             +======================================+\n"
+            )
     }
 }
