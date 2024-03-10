@@ -1,4 +1,4 @@
-use std::error;
+use std::{error, char};
 
 /// Application result type.
 pub type AppResult<T> = std::result::Result<T, Box<dyn error::Error>>;
@@ -9,6 +9,7 @@ pub struct App {
     /// Is the application running?
     running: bool,
     state: AppState,
+    image: [[char;40];40],
 }
 
 #[derive(Debug)]
@@ -22,6 +23,7 @@ impl Default for App {
         Self {
             running: true,
             state: AppState::Menu,
+            image: [[' ';40];40],
         }
     }
 }
@@ -32,6 +34,7 @@ impl App {
         App {
             running: true,
             state,
+            image: [[' ';40];40],
         }
     }
 
@@ -100,5 +103,11 @@ mod tests {
         }, &mut app)
             .expect("Error sending 'q' key event to test.");
         assert!(!app.running());
+    }
+
+    #[test]
+    fn app_starts_with_blank_image() {
+        let app = App::default();
+        assert_eq!(app.image, [[' ';40];40]);
     }
 }
