@@ -52,9 +52,11 @@ pub fn render(app: &mut App, frame: &mut Frame) {
             Block::bordered()
             .title("Ari-Color v0.1")
             .title_alignment(Alignment::Center)
+            .padding(Padding::new(0, 0, layout[1].height / 2 - 20 / 2, 0))
             .border_type(BorderType::Rounded),
         )
-        .style(Style::default().fg(Color::Yellow).bg(Color::Black)),
+        .style(Style::default().fg(Color::Yellow).bg(Color::Black))
+        .centered(),
         layout[1],
     );
 }
