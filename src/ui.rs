@@ -38,14 +38,7 @@ pub fn render(app: &mut App, frame: &mut Frame) {
         layout[0],
     );
 
-    let mut text = String::new();
-    for row in app.image() {
-        for tile in row {
-            text.push(tile.glyph());
-        }
-        text.push('\n');
-    }
-    let ascii_grid = Paragraph::new(text);
+    let ascii_grid = Paragraph::new(app.image_as_string());
 
     frame.render_widget(
         ascii_grid.block(
