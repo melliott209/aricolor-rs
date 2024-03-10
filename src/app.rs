@@ -9,7 +9,7 @@ pub struct App {
     /// Is the application running?
     running: bool,
     state: AppState,
-    image: [[char;40];40],
+    image: [[Tile;20];40],
 }
 
 #[derive(Debug)]
@@ -23,7 +23,7 @@ impl Default for App {
         Self {
             running: true,
             state: AppState::Menu,
-            image: [[' ';40];40],
+            image: [[Tile::default();20];40],
         }
     }
 }
@@ -34,7 +34,7 @@ impl App {
         App {
             running: true,
             state,
-            image: [[' ';40];40],
+            image: [[Tile::default();20];40],
         }
     }
 
@@ -61,6 +61,30 @@ impl App {
 
     pub fn reveal() {
         todo!("Not yet implemented")
+    }
+}
+
+/// A single character-tile on the drawing surface. If hidden
+/// it doesn't get drawn.
+
+#[derive(Debug, Copy, PartialEq)]
+struct Tile {
+    glyph: char,
+    hidden: bool,
+}
+
+impl Clone for Tile {
+    fn clone(&self) -> Self {
+        *self
+    }
+}
+
+impl Tile {
+    pub fn default() -> Self {
+        Tile {
+            glyph: ' ',
+            hidden: true,
+        }
     }
 }
 
@@ -108,6 +132,6 @@ mod tests {
     #[test]
     fn app_starts_with_blank_image() {
         let app = App::default();
-        assert_eq!(app.image, [[' ';40];40]);
+        assert_eq!(app.image, [[Tile{glyph: ' ', hidden: true};20];40]);
     }
 }
