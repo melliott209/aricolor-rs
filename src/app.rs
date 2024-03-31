@@ -1,3 +1,4 @@
+use rand::{thread_rng, Rng};
 use std::{
     char, error,
     fs::File,
@@ -57,7 +58,11 @@ impl App {
         let mut text = String::new();
         for row in self.image {
             for tile in row {
-                text.push(tile.glyph());
+                if tile.hidden {
+                    text.push('.')
+                } else {
+                    text.push(tile.glyph());
+                }
             }
             text.push('\n');
         }
@@ -81,7 +86,12 @@ impl App {
             .expect("Failed to load image");
     }
 
-    fn load_image(&mut self, filepath: &str) -> Result<(), io::Error> {
+    pub fn reveal_part(&mut self) {
+        let row = thread_rng().gen_range(0..=19);
+        self.image[row].iter_mut().for_each(|t| t.hidden = false);
+    }
+
+    pub fn load_image(&mut self, filepath: &str) -> Result<(), io::Error> {
         let mut file = File::open(filepath)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
