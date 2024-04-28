@@ -17,7 +17,7 @@ pub struct App {
     image: [[Tile; 40]; 20],
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum AppState {
     Menu,
     Draw,
@@ -54,6 +54,10 @@ impl App {
         self.image
     }
 
+    pub fn state(&self) -> AppState {
+        self.state
+    }
+
     pub fn image_as_string(&self) -> String {
         let mut text = String::new();
         for row in self.image {
@@ -87,8 +91,20 @@ impl App {
     }
 
     pub fn reveal_part(&mut self) {
-        let row = thread_rng().gen_range(0..=19);
-        self.image[row].iter_mut().for_each(|t| t.hidden = false);
+        let mut hidden = Vec::new();
+        for (i, row) in self.image.iter().enumerate() {
+            if row[0].hidden {
+                hidden.push(i);
+            }
+        }
+        if hidden.is_empty() {
+            self.change_state();
+            return;
+        }
+        let row = thread_rng().gen_range(0..hidden.len());
+        self.image[hidden[row]]
+            .iter_mut()
+            .for_each(|t| t.hidden = false);
     }
 
     pub fn load_image(&mut self, filepath: &str) -> Result<(), io::Error> {
@@ -99,6 +115,7 @@ impl App {
         for (row, line) in contents.lines().enumerate() {
             for (col, c) in line.chars().enumerate() {
                 self.image[row][col].set_glyph(c);
+                self.image[row][col].set_hidden(true);
             }
         }
         Ok(())
@@ -143,6 +160,10 @@ impl Tile {
 
     pub fn set_glyph(&mut self, c: char) {
         self.glyph = c;
+    }
+
+    pub fn set_hidden(&mut self, hid: bool) {
+        self.hidden = hid;
     }
 }
 
